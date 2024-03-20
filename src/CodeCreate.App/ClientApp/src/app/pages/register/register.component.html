@@ -1,0 +1,33 @@
+<p-card header="Register" class="w-3">
+    <form class="form" [formGroup]="registerForm" (submit)="register($event)">
+        <div class="d-flex align-items-center justify-content-center">
+
+            <div class="flex flex-column gap-2 mb-2">
+                <label for="email">Email*</label>
+                <input pInputText class="col form-field" name="email" formControlName="email" />
+            </div>
+
+            <div class="flex flex-column gap-2 mb-2">
+                <label for="password">Password*</label>
+                <input pInputText class="col form-field" type="password" name="password" formControlName="password"
+                    autocomplete="on" />
+            </div>
+            <div class="flex flex-column gap-2 mb-2">
+                <label for="confirmPassword">Confirm password*</label>
+                <input pInputText class="col form-field" type="password" name="confirmPassword"
+                    formControlName="confirmPassword" autocomplete="on" />
+            </div>
+
+            <div class="row m-3" *ngIf="registerFailed">
+                <label style="color: red">Registration failed.</label>
+            </div>
+
+            <div class="row m-3" *ngFor="let error of errors">
+                <label style="color: red">{{error}}</label>
+            </div>
+
+            <p-button class="btn btn-primary" [disabled]="!registerForm.valid" type="submit">Register</p-button>
+
+        </div>
+    </form>
+</p-card>

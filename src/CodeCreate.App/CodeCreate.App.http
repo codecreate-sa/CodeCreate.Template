@@ -1,0 +1,6 @@
+@CodeCreate.App_HostAddress = http://localhost:5049
+
+GET {{CodeCreate.App_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

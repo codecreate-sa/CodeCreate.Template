@@ -1,0 +1,25 @@
+<p-card header="Sign in" class="w-3">
+    <form class="form flex flex-column" [formGroup]="loginForm" (submit)="signIn($event)">
+
+        <div class="flex flex-column gap-2 mb-2 ">
+            <label for="email">Email*</label>
+            <input pInputText class="col form-field" name="email" formControlName="email" />
+        </div>
+
+        <div class="flex flex-column gap-2 mb-2">
+            <label for="password">Password*</label>
+            <input pInputText class="col form-field" type="password" name="password" formControlName="password"
+                autocomplete="on" />
+        </div>
+
+        <div class="row m-3" *ngIf="authFailed">
+            <label style="color: red">Invalid credentials</label>
+        </div>
+
+        <div class="row flex justify-content-between">
+            <p-button class="btn btn-primary" [disabled]="!loginForm.valid" type="submit">Sign In</p-button>
+            <p-button class="btn btn-primary" routerLink="/register">Register</p-button>
+        </div>
+
+    </form>
+</p-card>

@@ -1,0 +1,13 @@
+<p-menubar>
+    <ng-template pTemplate="start">
+        <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="40" class="mr-2" />
+    </ng-template>
+    <ng-template pTemplate="end">
+        <p-menu #settingsMenu [model]="settingsItems" [popup]="true"></p-menu>
+        <p-button *ngIf="loggedInUser$ | async as user" title="Settings" [label]="user.email" icon="pi pi-cog" iconPos="right" (click)="settingsMenu.toggle($event)" 
+            [rounded]="true" [text]="true" [raised]="true"></p-button>
+
+        <p-button title="Log out" icon="pi pi-power-off" iconPos="right" 
+            [rounded]="true" [text]="true" [raised]="false" (onClick)="signOut()"></p-button>
+    </ng-template>
+</p-menubar>
