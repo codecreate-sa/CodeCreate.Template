@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IServiceCollection RegisterServices(
+    public static IServiceCollection AddApplicationServices(
         this IServiceCollection services)
     {
         services.AddScoped<ICustomerService, CustomerService>();

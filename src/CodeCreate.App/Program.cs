@@ -26,12 +26,13 @@ public class Program
                 });
         });
 
-        builder.Services.RegisterServices();
+        builder.Services.AddApplicationServices();
 
         builder.Services.AddAuthentication();
 
         builder.Services.AddAuthorization();
 
+        // Shouldn't UseStaticFiles be used instead as per the documentation?
         builder.Services.AddSpaStaticFiles(configuration =>
         {
             configuration.RootPath = "ClientApp/dist";
@@ -42,7 +43,11 @@ public class Program
 
         builder.Services.RegisterDbContext(connectionString);
 
-        builder.Services.AddIdentityApiEndpoints<IdentityUser<Guid>>()
+        builder.Services
+            // Replace with separate calls to AddAuthentication to select only cookies
+            // See https://github.com/dotnet/AspNetCore.Docs.Samples/blob/main/samples/ngIdentity/ngIdentity.Server/Program.cs#L9-L19
+            // and https://github.com/dotnet/AspNetCore.Docs.Samples/blob/main/samples/ngIdentity/ngIdentity.Server/Program.cs#L24-L26
+            .AddIdentityApiEndpoints<IdentityUser<Guid>>()
             .AddEntityFrameworkStores<TemplateDbContext>();
 
         builder.Services.AddControllers();
