@@ -1,4 +1,6 @@
-﻿namespace CodeCreate.Data.Entities;
+﻿using System;
+
+namespace CodeCreate.Data.Entities;
 
 public class Customer
 {

@@ -1,4 +1,6 @@
-﻿namespace CodeCreate.Domain.Models;
+﻿using System;
+
+namespace CodeCreate.Domain.Models;
 
 public class CustomerDto
 {
