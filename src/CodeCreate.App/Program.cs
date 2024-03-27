@@ -12,6 +12,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
+
         var origins = builder.Configuration
             .GetSection("AllowCors").Get<string[]>() ?? Array.Empty<String>();
 
