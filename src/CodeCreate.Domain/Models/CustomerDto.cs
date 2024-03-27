@@ -1,24 +1,27 @@
-﻿namespace CodeCreate.Domain.Models;
+﻿using System;
 
-public class CustomerDto
+namespace CodeCreate.Domain.Models
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public Guid Id { get; set; }
+    public class CustomerDto
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Guid Id { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string FirstName { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string FirstName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string LastName { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string LastName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Email { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Email { get; set; } = string.Empty;
+    }
 }

@@ -1,22 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CodeCreate.Data.Extensions;
-
-public static class DbContextExtensions
+namespace CodeCreate.Data.Extensions
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="connectionString"></param>
-    /// <returns></returns>
-    public static IServiceCollection RegisterDbContext(
-        this IServiceCollection services, string connectionString)
+    public static class DbContextExtensions
     {
-        services.AddDbContext<Contexts.TemplateDbContext>(
-            options => options.UseSqlServer(connectionString));
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
+        public static IServiceCollection RegisterDbContext(
+            this IServiceCollection services, string connectionString)
+        {
+            services.AddDbContext<Contexts.TemplateDbContext>(
+                options => options.UseSqlServer(connectionString));
 
-        return services;
+            return services;
+        }
     }
 }

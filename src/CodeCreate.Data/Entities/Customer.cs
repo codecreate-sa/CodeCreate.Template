@@ -1,24 +1,27 @@
-﻿namespace CodeCreate.Data.Entities;
+﻿using System;
 
-public class Customer
+namespace CodeCreate.Data.Entities
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public Guid Id { get; set; }
+    public class Customer
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Guid Id { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string FirstName { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string FirstName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string LastName { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string LastName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Email { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Email { get; set; } = string.Empty;
+    }
 }

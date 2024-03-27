@@ -1,104 +1,90 @@
-using CodeCreate.Data.Contexts;
+using CodeCreate.App.Setup;
 using CodeCreate.Data.Extensions;
 using CodeCreate.Domain.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
 
-namespace CodeCreate.App;
-
-public class Program
+namespace CodeCreate.App
 {
-    public static void Main(string[] args)
+    public class Program
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        var origins = builder.Configuration
-            .GetSection("AllowCors").Get<string[]>() ?? Array.Empty<String>();
-
-        builder.Services.AddCors(options =>
+        public static void Main(string[] args)
         {
-            options.AddDefaultPolicy(
-                policy =>
-                {
-                    policy.WithOrigins(origins)
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                });
-        });
+            var builder = WebApplication.CreateBuilder(args);
+            builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 
-        builder.Services.RegisterServices();
+            builder.Services.AddApiServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
 
-        builder.Services.AddAuthentication();
-
-        builder.Services.AddAuthorization();
-
-        builder.Services.AddSpaStaticFiles(configuration =>
-        {
-            configuration.RootPath = "ClientApp/dist";
-        });
-
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                               ?? string.Empty;
-
-        builder.Services.RegisterDbContext(connectionString);
-
-        builder.Services.AddIdentityApiEndpoints<IdentityUser<Guid>>()
-            .AddEntityFrameworkStores<TemplateDbContext>();
-
-        builder.Services.AddControllers();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
-        var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-            app.UseDeveloperExceptionPage();
-        } else
-        {
-            app.UseExceptionHandler("/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
-        }
-
-        if (!app.Environment.IsDevelopment())
-        {
-            app.UseSpaStaticFiles();
-        }
-
-        app.MapIdentityApi<IdentityUser<Guid>>();
-
-        app.UseHttpsRedirection();
-
-        // protection from cross-site request forgery (CSRF/XSRF) attacks with empty body
-        // form can't post anything useful so the body is null, the JSON call can pass
-        // an empty object {} but doesn't allow cross-site due to CORS.
-        app.MapPost("/logout", async (
-            SignInManager<IdentityUser<Guid>> signInManager,
-            [FromBody] object empty) =>
-        {
-            if (empty is not null)
+            // Shouldn't UseStaticFiles be used instead as per the documentation?
+            builder.Services.AddSpaStaticFiles(configuration =>
             {
-                await signInManager.SignOutAsync();
-                return Results.Ok();
+                configuration.RootPath = "ClientApp/dist";
+            });
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+
+            builder.Services.RegisterDbContext(connectionString);
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
 
-            return Results.NotFound();
-        }).RequireAuthorization();
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
 
-        app.UseCors();
+            app.MapIdentityApi<IdentityUser<Guid>>();
 
-        app.UseAuthentication();
+            app.UseHttpsRedirection();
 
-        app.UseAuthorization();
+            // protection from cross-site request forgery (CSRF/XSRF) attacks with empty body
+            // form can't post anything useful so the body is null, the JSON call can pass
+            // an empty object {} but doesn't allow cross-site due to CORS.
+            app.MapPost("/logout", async (
+                SignInManager<IdentityUser<Guid>> signInManager,
+                [FromBody] object empty) =>
+            {
+                if (empty is not null)
+                {
+                    await signInManager.SignOutAsync();
+                    return Results.Ok();
+                }
 
-        app.MapControllers();
+                return Results.NotFound();
+            }).RequireAuthorization();
 
-        app.Run();
+            app.UseSwaggerForApi(app.DescribeApiVersions());
+            app.UseHealthChecks();
+            app.UseCors();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapControllers();
+
+            app.Run();
+        }
     }
 }
